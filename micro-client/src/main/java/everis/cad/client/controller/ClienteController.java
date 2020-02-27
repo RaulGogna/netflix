@@ -23,7 +23,7 @@ import everis.cad.client.service.ClienteService;
 
 @RestController
 @RequestMapping("/cliente")
-public class ClienteController implements ClientController {
+public class ClienteController {
 
 	@Autowired
 	private ClienteService service;
@@ -31,7 +31,6 @@ public class ClienteController implements ClientController {
 	@Autowired
 	private ModelMapper model;
 
-	@Override
 	@PostMapping
 	public ResponseEntity<String> create(@RequestBody ClienteDto dto) {
 		if(!service.find(dto.getDni()).get().equals(null))
@@ -42,7 +41,6 @@ public class ClienteController implements ClientController {
 		}
 	}
 
-	@Override
 	@GetMapping(value = "/{dni}")
 	public ResponseEntity<ClienteDto> find(@PathVariable String dni) {
 		Optional<Cliente> cliente = service.find(dni);
@@ -52,8 +50,7 @@ public class ClienteController implements ClientController {
 		return new ResponseEntity<ClienteDto>(dto, HttpStatus.OK);
 	}
 
-	@Override
-	@GetMapping
+	@GetMapping(value = "/c")
 	public List<ClienteDto> findAll() {
 		List<ClienteDto> clientes = service.findAll()
 				.stream()
@@ -63,14 +60,12 @@ public class ClienteController implements ClientController {
 		return clientes;
 	}
 
-	@Override
 	@PutMapping(value = "/{dni}")
 	public void update(@RequestBody ClienteDto dto) {
 		Cliente cliente = model.map(dto, Cliente.class);
 		service.create(cliente);
 	}
 
-	@Override
 	@DeleteMapping("/{dni}")
 	public void remove(@PathVariable String dni) {
 		service.remove(dni);
